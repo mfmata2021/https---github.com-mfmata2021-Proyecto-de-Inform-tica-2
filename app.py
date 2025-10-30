@@ -187,10 +187,9 @@ def menu_listas(plataforma: PlataformaMusical):
             
             if len(plataforma.listas) != 0:
                 print(f"Listas disponibles: ")
-                idx = 1
-                for listas in plataforma.listas:
+                for idx, listas in enumerate(plataforma.listas, start=1):
                     print(f"{idx}) {listas.nombre} ({listas.canciones} canciones)")
-                    idx += 1
+
 
 
                 #Bucle para asegurarnos que el usurio introduce un nombre válido de lista 
@@ -204,8 +203,8 @@ def menu_listas(plataforma: PlataformaMusical):
                         if len(lista_encontrada.canciones) == 0:
                             print("Esta lista no tiene canciones.")
                         else:
-                            for i, cancion in enumerate(lista_encontrada.canciones, start=1):
-                                print(f"{i}. {cancion}")
+                            for idx, cancion in enumerate(lista_encontrada.canciones, start=1):
+                                print(f"{idx}. {cancion}")
                         break  # salimos del while
 
                     else:
