@@ -103,8 +103,6 @@ class PlataformaMusical:
     def obtener_lista(self, nombre: str) -> ListaReproduccion:
 
         for l in self.listas:
-            if nombre == l.nombre:
-                print("Contenido de la lista: ")
-            
-                return 
-        pass
+            if l.nombre == nombre:
+                return  l 
+        return None

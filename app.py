@@ -191,10 +191,43 @@ def menu_listas(plataforma: PlataformaMusical):
                 for listas in plataforma.listas:
                     print(f"{idx}) {listas.nombre} ({listas.canciones} canciones)")
                     idx += 1
-                ver_contenido = input("Indica el nombre de la lista que quieres visualizar: ")
-                plataforma.obtener_lista(ver_contenido)
+
+
+                #Bucle para asegurarnos que el usurio introduce un nombre válido de lista 
+                while True:
+                    ver_contenido = input("\nIndica el nombre de la lista que quieres visualizar: ")
+
+                    lista_encontrada = plataforma.obtener_lista(ver_contenido)  #Aquí se devuelve el objeto LisaReproducción
+
+                    if lista_encontrada:
+                        print(f"\n--- Contenido de '{lista_encontrada.nombre}' ---")
+                        if len(lista_encontrada.canciones) == 0:
+                            print("Esta lista no tiene canciones.")
+                        else:
+                            for i, cancion in enumerate(lista_encontrada.canciones, start=1):
+                                print(f"{i}. {cancion}")
+                        break  # salimos del while
+
+                    else:
+                        print("No existe una lista con ese nombre. Intenta de nuevo.")
+
             else: 
                 print("No tienes listas para mostrar")
+
+        
+        if opc == 4:
+            print("-- Añadir canciones a lista --")
+
+        if opc == 5:
+            print("-- Eliminar canción de lista --")
+
+
+        if opc == 0:
+            break 
+
+# -----------------------------------------------------------------------------------
+# --------------------------- Menú de gestión de reproducción  -----------------------------
+# -----------------------------------------------------------------------------------
 def menu_reproduccion(plataforma: PlataformaMusical):
     pass
 
