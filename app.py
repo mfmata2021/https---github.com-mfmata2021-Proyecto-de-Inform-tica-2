@@ -3,11 +3,20 @@
 from musica_platafoma import PlataformaMusical
 
 def pedir_int(a):
-   
-    return int(input(a))
+ 
+ #Bucle para gestionar valores inválidos a la hora de entrar a los menús 
+    while True: 
+        try: 
+            valor = int(input(a))
+            break
+        except ValueError:
+            print("Valor inválido. Intente de nuevo")
+    return valor
 
+# -----------------------------------------------------------------------------------
+# ----------------------    Menú de gestión de canciones.   -------------------------
+# -----------------------------------------------------------------------------------
 
-# ----------------------    Menú de gestión de canciones.   ---------------------------
 def menu_canciones(plataforma: PlataformaMusical):
 
     while True:
@@ -24,15 +33,14 @@ def menu_canciones(plataforma: PlataformaMusical):
             print("\n-- Añadir canción --")
             titulo = input("Título: ")
             artista = input("Artista: ")
-            
-            #Esto es un bucle para comprobar que el valor de duración es un número entero 
+
+            # Esto es un bucle para comprobar que el valor de duración es un número entero
             while True: 
                 try:
                     duracion = int(input("Duración (segundos): "))
                     break
                 except ValueError: #El except tiene que incluir el ValueError para que funcione 
                     print("El valor introducido debe ser un número. Inténtelo de nuevo.")
-                
 
             genero = input("Género: ")
             ruta = input("Ruta a archivo MP3: ")
@@ -41,38 +49,51 @@ def menu_canciones(plataforma: PlataformaMusical):
             else: #Si no es un FALSE
                 print("No se pudo añadir la canción. Ya existe.")
 
-
         # Para modificar una canción
         elif opc == 2:
-            print("\n-- Modificar canción --")
+            print("\n-- Modificar canción --\n")
             if len(plataforma.canciones) != 0:
                 print("Canciones disponibles: ")
                 for canciones in plataforma.canciones:
                     print(f"{canciones.id}) {canciones.titulo} - {canciones.artista} ({canciones.duracion} segundos)")
 
-                # REVISAR !!
-                nuevo_titulo = input("Nuevo título (enter para dejar): ")
-                if nuevo_titulo == "":
-                    nuevo_titulo = canciones.titulo
+                # Para que el usuario, de la lista de canciones disponibles escoja cual quiere modificar
+                try:
+                    id_cancion = int(input("\nIntroduce el número de la canción que quieras modificar: "))
+                except ValueError:
+                    print("El valor introducido debe ser un número. Inténtelo de nuevo.")
 
-                nuevo_artista = input("Nuevo artista (enter para dejar): ")
-                if nuevo_artista == "":
-                    nuevo_artista = canciones.artista
+                # Para comprobar que el valor introducido no es menor que 0 ni mayor que el num de id en la lista
+                if (id_cancion < 1) or (id_cancion > len(plataforma.canciones)):
+                    print("Número fuera de rango.")
 
-                nueva_duracion = int(input("Nueva duración (enter para dejar): "))
-                if nueva_duracion == "":
-                    nueva_duracion = canciones.duracion
+                else:
+                    cancion = plataforma.canciones[id_cancion - 1] #IMPORTANTE el -1 es porque las listas empiezan desde 0 y nuestros Id en 1, por lo que si escojo la cancion con id 1, sería la cancion en la posocion 0
 
-                nuevo_genero = input("Nuevo género (enter para dejar): ")
-                if nuevo_genero == "":
-                    nuevo_genero = canciones.genero
+                nuevo_titulo = input("Nuevo título (enter para dejar igual): ") or cancion.titulo
+                nuevo_artista = input("Nuevo artista (enter para dejar igual): ") or cancion.artista
 
-                nueva_ruta = input("Nueva ruta a archivo MP3 (enter para dejar): ")
-                if nueva_ruta == "":
-                    nueva_ruta = canciones.archivo_mp3
+                # CONTROL DE ERRORES PARA DURACIÓN
 
-                plataforma.editar_cancion(nuevo_titulo, nuevo_artista, nueva_duracion, nuevo_genero, nueva_ruta)
-                print("Modificado")
+                nueva_duracion_str = input("Nueva duración (enter para dejar igual): ")
+                if nueva_duracion_str == "":
+                    nueva_duracion = cancion.duracion
+                else:
+                    try:
+                        nueva_duracion = int(nueva_duracion_str)
+                    except ValueError:
+                        print("Duración no válida. Se mantiene la anterior.")
+                        nueva_duracion = cancion.duracion
+
+                nuevo_genero = input("Nuevo género (enter para dejar igual): ") or cancion.genero
+                nueva_ruta = input("Nueva ruta (enter para dejar igual): ") or cancion.archivo_mp3
+
+                plataforma.editar_cancion(id_cancion, nuevo_titulo, nuevo_artista, nueva_duracion, nuevo_genero, nueva_ruta)
+
+                # REVISAR! En algunas pruebas me aparecía esto doble, una donde aparecia "segundos" y otra donde no
+                print(" Lista de canciones actulizada: ")
+                for canciones in plataforma.canciones:
+                    print(f"{canciones.id}) {canciones.titulo} - {canciones.artista} ({canciones.duracion} segundos)")
 
             else:
                 print("Lo sentimos. Actualmente no hay canciones disponibles.")
@@ -83,30 +104,47 @@ def menu_canciones(plataforma: PlataformaMusical):
             if len(plataforma.canciones) != 0:
                 print("Canciones disponibles: ")
                 for canciones in plataforma.canciones:
-                    print(f"{canciones.id}) {canciones.titulo} - {canciones.artista} ({canciones.duracion})")
+                    print(f"{canciones.id}) {canciones.titulo} - {canciones.artista} ({canciones.duracion} segundos)")
 
-                #Preguntar !! Lo del 0, no entiendo exactamente a donde habría que volver 
-                cancion_eliminada = int(input("Selecciona número de la canción (0 para cancelar): "))
-                plataforma.eliminar_cancion(cancion_eliminada)
-                print("Eliminada")
+                # Preguntar !! Lo del 0, no entiendo exactamente a donde habría que volver
+                # Esto es un bucle para comprobar que el valor de duración es un número entero
+                while True:
+                    try:
+                        cancion_eliminada = int(input("\nSelecciona el id de la canción que quieras eliminar: "))
+                        if (cancion_eliminada < 1) or cancion_eliminada > len(plataforma.canciones):
+                            print("No hay ninguna canción con ese ID. Intente de nuevo")
+                        else:
+                            if plataforma.eliminar_cancion(cancion_eliminada):
+                                print("Canción eliminada")
+                            else:
+                                print("No se pudo eliminar la canción escogida")
+                            break
+                    except ValueError:  # El except tiene que incluir el ValueError para que funcione
+                        print(
+                            "El valor introducido debe ser un número. Inténtelo de nuevo."
+                        )
             else:
                 print("Lo sentimos. Actualmente no hay canciones disponibles.")
 
-        #Para mostrar las canciones que están en la lista 
+        # Para mostrar las canciones que están en la lista
         elif opc == 4:
             print("\n-- Listar canciones --")
-            for canciones in plataforma.canciones:
-                print(f"{canciones.id}) {canciones.titulo} - {canciones.artista} ({canciones.duracion}) [{canciones.genero}] --> {canciones.archivo_mp3}")
 
-        #Para volver al menú principal
+            if len(plataforma.canciones) != 0:
+                for canciones in plataforma.canciones:
+                    print(f"{canciones.id}) {canciones.titulo} - {canciones.artista} ({canciones.duracion} segundos) [{canciones.genero}] --> {canciones.archivo_mp3}")
+            else:
+                print("Actualmente no hay canciones disponibles\n")
+        # Para volver al menú principal
         elif opc == 0:
-            main()
+            break
 
         else:
             print("Opción inválida")
 
-
+# -----------------------------------------------------------------------------------
 # --------------------------- Menú de gestión de listas -----------------------------
+# -----------------------------------------------------------------------------------
 
 def menu_listas(plataforma: PlataformaMusical):
 
@@ -122,9 +160,11 @@ def menu_listas(plataforma: PlataformaMusical):
 
         if opc == 1:
             print("\n--- Crear lista ---")
-            nombre_lista = input("Nombre de la lista")
-            plataforma.crear_lista(nombre_lista)
-            print("Creada")
+            nombre_lista = input("Nombre de la lista: ")
+            if plataforma.crear_lista(nombre_lista, canciones=0): #Esto inicializa la lista con 0 canciones 
+                print("Creada")
+            else:
+                print("Lo siento. No se ha podido crear la lista, escoge otro nombre")
 
         if opc == 2:
             print("\n--- Eliminar lista ---")
@@ -132,18 +172,29 @@ def menu_listas(plataforma: PlataformaMusical):
                 print("Listas disponibles: ")
                 idx = 1
                 for listas in plataforma.listas:
-                    print(f"{idx}) {listas.nombre}")
+                    print(f"{idx}) {listas.nombre} ({listas.canciones} canciones)")
                     idx += 1
 
                 # Preguntar !! Lo del 0, no entiendo exactamente a donde habría que volver
-                lista_eliminada = int(input("Selecciona el número de la lsita que quieras eliminar: "))
+                lista_eliminada = input("\nSelecciona el nombre de la lista que quieras eliminar: ")
                 plataforma.borrar_lista(lista_eliminada)
                 print("Lista eliminada")
             else:
-                print("Lo sentimos. Actualmente no hay canciones disponibles.")
+                print("Lo sentimos. Actualmente no hay listas disponibles.")
 
-    pass
-
+        if opc == 3:
+            print("\n--- Ver contenidos de listas ----")
+            
+            if len(plataforma.listas) != 0:
+                print(f"Listas disponibles: ")
+                idx = 1
+                for listas in plataforma.listas:
+                    print(f"{idx}) {listas.nombre} ({listas.canciones} canciones)")
+                    idx += 1
+                ver_contenido = input("Indica el nombre de la lista que quieres visualizar: ")
+                plataforma.obtener_lista(ver_contenido)
+            else: 
+                print("No tienes listas para mostrar")
 def menu_reproduccion(plataforma: PlataformaMusical):
     pass
 
