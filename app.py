@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Interfaz por consola para la PlataformaMusical (parte 1)."""
-from musica.platafoma import PlataformaMusical
+from musica.plataforma import PlataformaMusical
 
 def pedir_int(a):
  
@@ -163,7 +163,7 @@ def menu_listas(plataforma: PlataformaMusical):
         if opc == 1:
             print("\n--- Crear lista ---")
             nombre_lista = input("Nombre de la lista: ")
-            if plataforma.crear_lista(nombre_lista, canciones= []): #Esto inicializa la lista con 0 canciones 
+            if plataforma.crear_lista(nombre_lista): #Esto inicializa la lista con 0 canciones 
                 print("Creada")
             else:
                 print("Lo siento. No se ha podido crear la lista, escoge otro nombre")

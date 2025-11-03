@@ -26,9 +26,9 @@ class Cancion:
 
 class ListaReproduccion: 
 
-    def __init__(self, nombre, canciones):
+    def __init__(self, nombre):
         self.nombre: str = nombre
-        self.canciones: list[int] = canciones
+        self.canciones: list[int] = []
 
     def anadir_cancion(self, id_cancion: int) -> bool:
 
@@ -101,13 +101,13 @@ class PlataformaMusical:
     # --------------------------- Menú de gestión de listas -----------------------------
     # -----------------------------------------------------------------------------------
 
-    def crear_lista(self, nombre: str, canciones) -> bool:
+    def crear_lista(self, nombre: str) -> bool:
 
         for l in self.listas:
             if l.nombre == nombre:
                 return False #Esto no permite que haya dos listas con el mismo nombre 
         
-        nueva_lista = ListaReproduccion(nombre, canciones)
+        nueva_lista = ListaReproduccion(nombre)
         self.listas.append(nueva_lista)
         return True
 
