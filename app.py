@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Interfaz por consola para la PlataformaMusical (parte 1)."""
-from musica import PlataformaMusical
+from musica.platafoma import PlataformaMusical
 
 def pedir_int(a):
  
