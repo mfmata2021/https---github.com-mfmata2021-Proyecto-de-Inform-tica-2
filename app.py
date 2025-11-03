@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Interfaz por consola para la PlataformaMusical (parte 1)."""
-from musica_platafoma import PlataformaMusical
+from musica import PlataformaMusical
 
 def pedir_int(a):
  
@@ -237,8 +237,6 @@ def menu_listas(plataforma: PlataformaMusical):
                 lista_seleccionada = plataforma.listas[eleccion - 1] #Esto lo que hace es que la lista seleccionada termina siendo la lista que esta en la posición que se seleccionó (Posiciones empiezan en 0, por eso se resta -1 )
                 print(f"La lista seleccionada es: {lista_seleccionada.nombre}")
 
-                print(len(plataforma.canciones))
-
                 if len(plataforma.canciones) != 0:
 
                     print("\nCanciones disponibles para añadir: ")
@@ -258,13 +256,16 @@ def menu_listas(plataforma: PlataformaMusical):
                             break
 
                     cancion_seleccionada = None #Inicializamos la variable que representará nuestra cancion eleccionada
-                    if eleccion == canciones.id: #Si la elección del usuario corresponde con el id de la canción 
-                        cancion_seleccionada = canciones # Nuesta canción seleccionada será la canción con ese id
+                    for cancion in plataforma.canciones:
+                        if eleccion == cancion.id: #Si la elección del usuario corresponde con el id de la canción 
+                            cancion_seleccionada = cancion # Nuesta canción seleccionada será la canción con ese id
+
+                    if cancion_seleccionada is not None:
                         lista_seleccionada.canciones.append(cancion_seleccionada) #Agregamos la canción a la lista que hemos seleccionado antes
                         print("Canción añadida\n")
 
                 else: 
-                    print("No hay canciones disponibles para añadir. Primero añade canciones a la biblioteca")
+                    print("No hay canciones disponibles para añadir. Primero añade canciones a la biblioteca.")
 
             else:
                 print("No hay listas disponibles a las que agregar canciones. Primero crea una lista de reproducción.")
