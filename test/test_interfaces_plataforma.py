@@ -4,7 +4,7 @@ import importlib
 from typing import get_type_hints, List
 
 # Import idéntico al de app.py.
-from musica.plataforma import PlataformaMusical  # noqa: F401  (lo usamos para validar import)
+from musica.platafoma import PlataformaMusical # noqa: F401  (lo usamos para validar import)
 
 MODULE_PATH = "musica.plataforma"
 

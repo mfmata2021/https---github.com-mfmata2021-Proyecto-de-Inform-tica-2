@@ -272,6 +272,49 @@ def menu_listas(plataforma: PlataformaMusical):
 
         elif opc == 5:
             print("-- Eliminar canción de una lista --")
+            # Verificar si hay listas disponibles
+            if not plataforma.listas:
+                print("No hay listas disponibles para eliminar canciones.")
+            else:
+                # Mostrar listas disponibles
+                print("Listas disponibles:")
+                for idx, lista in enumerate(plataforma.listas, start=1):
+                    print(f"{idx}) {lista.nombre} ({len(lista.canciones)} canciones)")
+
+            # Selección de lista
+            while True:
+                eleccion_lista = pedir_int("Selecciona número de la lista (0 para cancelar): ")
+                if eleccion_lista == 0:
+                    break
+                elif 1 <= eleccion_lista <= len(plataforma.listas):
+                    lista_seleccionada = plataforma.listas[eleccion_lista - 1]
+                    print(f"\nLa lista seleccionada es: {lista_seleccionada.nombre}")
+                    break
+                else:
+                    print("Valor fuera de rango. Inténtalo de nuevo.")
+
+                # Si el usuario no canceló
+                if eleccion_lista != 0:
+                    if not lista_seleccionada.canciones:
+                        print("La lista está vacía, no hay canciones para eliminar.")
+                    else:
+                        # Mostrar canciones de la lista
+                        print(f"\nCanciones disponibles en '{lista_seleccionada.nombre}':")
+                        for i, cancion in enumerate(lista_seleccionada.canciones, start=1):
+                            print(f"{i}) {cancion.titulo} - {cancion.artista}")
+
+                        # Selección de canción a eliminar
+                        while True:
+                            eleccion_cancion = pedir_int("Selecciona número de la canción a eliminar (0 para cancelar): ")
+                            if eleccion_cancion == 0:
+                                break
+                            elif 1 <= eleccion_cancion <= len(lista_seleccionada.canciones):
+                                cancion_eliminar = lista_seleccionada.canciones.pop(eleccion_cancion - 1)
+                                print(f"Canción '{cancion_eliminar.titulo}' eliminada de la lista.")
+                                break
+                            else:
+                                print("Valor fuera de rango. Inténtalo de nuevo.")
+
 
         elif opc == 0:
             break 
