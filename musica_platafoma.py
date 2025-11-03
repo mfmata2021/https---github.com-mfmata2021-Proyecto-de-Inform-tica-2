@@ -1,3 +1,7 @@
+import pygame
+import time
+
+
 class Cancion:
 
     def __init__(self,id, titulo, artista,duracion,genero,archivo):
@@ -8,8 +12,17 @@ class Cancion:
         self.genero: str = genero
         self.archivo_mp3: str =  archivo
 
-    def reproducir() -> None:
-        pass
+    def reproducir(self) -> None:
+
+        try:
+            pygame.mixer.init()
+            pygame.mixer.music.load(self.archivo_mp3)
+            pygame.mixer.music.play()
+            print(f"Reproduciendo: {self.titulo} de {self.artista}")
+            time.sleep(self.duracion)
+            pygame.mixer.music.stop()
+        except Exception as e:
+            print(f"Error al reproducir: {e}")
 
 class ListaReproduccion: 
 
@@ -17,15 +30,21 @@ class ListaReproduccion:
         self.nombre: str = nombre
         self.canciones: list[int] = canciones
 
-
     def anadir_cancion(self, id_cancion: int) -> bool:
 
-        pass
+        if id_cancion not in self.canciones:
+            self.canciones.append(id_cancion)
+            return True
+        return False
+
+ 
 
     def quitar_cancion(self, id_cancion: int) -> bool:
+        if id_cancion in self.canciones:
+            self.canciones.remove(id_cancion)
+            return True
+        return False
 
-    
-        pass
 
 class PlataformaMusical: 
 

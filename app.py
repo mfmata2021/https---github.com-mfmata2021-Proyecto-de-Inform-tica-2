@@ -163,18 +163,18 @@ def menu_listas(plataforma: PlataformaMusical):
         if opc == 1:
             print("\n--- Crear lista ---")
             nombre_lista = input("Nombre de la lista: ")
-            if plataforma.crear_lista(nombre_lista, canciones=0): #Esto inicializa la lista con 0 canciones 
+            if plataforma.crear_lista(nombre_lista, canciones= []): #Esto inicializa la lista con 0 canciones 
                 print("Creada")
             else:
                 print("Lo siento. No se ha podido crear la lista, escoge otro nombre")
 
-        if opc == 2:
+        elif opc == 2:
             print("\n--- Eliminar lista ---")
             if len(plataforma.listas) != 0:
                 print("Listas disponibles: ")
                 idx = 1
                 for listas in plataforma.listas:
-                    print(f"{idx}) {listas.nombre} ({listas.canciones} canciones)")
+                    print(f"{idx}) {listas.nombre} ({len(listas.canciones)} canciones)")
                     idx += 1
 
                 # Preguntar !! Lo del 0, no entiendo exactamente a donde habría que volver
@@ -184,17 +184,15 @@ def menu_listas(plataforma: PlataformaMusical):
             else:
                 print("Lo sentimos. Actualmente no hay listas disponibles.")
 
-        if opc == 3:
+        elif opc == 3:
             print("\n--- Ver contenidos de listas ----")
-            
+
             if len(plataforma.listas) != 0:
                 print(f"Listas disponibles: ")
                 for idx, listas in enumerate(plataforma.listas, start=1):
-                    print(f"{idx}) {listas.nombre} ({listas.canciones} canciones)")
+                    print(f"{idx}) {listas.nombre} ({len(listas.canciones)} canciones)")
 
-
-
-                #Bucle para asegurarnos que el usurio introduce un nombre válido de lista 
+                # Bucle para asegurarnos que el usurio introduce un nombre válido de lista
                 while True:
                     ver_contenido = input("\nIndica el nombre de la lista que quieres visualizar: ")
 
@@ -215,48 +213,66 @@ def menu_listas(plataforma: PlataformaMusical):
             else: 
                 print("No tienes listas para mostrar")
 
-        
-        if opc == 4:
-            print("-- Añadir canciones a lista --")
+        elif opc == 4:
+            print("\n-- Añadir canciones a lista --")
 
-
-            #Revisa si hay listas disponibles a las que se le pueda agregar canciones 
+            # Revisa si hay listas disponibles a las que se le pueda agregar canciones
             if len(plataforma.listas) != 0:
                 print(f"Listas disponibles: ")
                 for idx, listas in enumerate(plataforma.listas, start=1):
-                    print(f"{idx}) {listas.nombre} ({listas.canciones} canciones)")
+                    print(f"{idx}) {listas.nombre} ({len(listas.canciones)} canciones)")
 
-                while True:
+                # Bucle para comprobar el que el número introducido no sea 0 o esté fuera de rango
+                while True: 
 
-                    try:
-                        lista_seleccionada = int(input("Duración (segundos): "))
-                        break
-                    except ValueError: #El except tiene que incluir el ValueError para que funcione 
-                        print("El valor introducido debe ser un número. Inténtelo de nuevo.")
-
-                    if lista_seleccionada == 0:
-                        break
-                
-                    
-                    #Revisa si hay canciones disponibles para agregarlas a las listas 
-                    if len(plataforma.canciones) != 0:
-                        print("Canciones disponibles para añadir: ")
-                        for c in plataforma.canciones:
-                            print(f"{c.id}) {c.titulo} - {c.artista}")
-
-                        cancion_seleccionada = input("Selecciona número de la canción a añadir (0 para cancelar): ")
-                        
-                            
+                    eleccion = pedir_int("Selecciona número de la lista (0 para cancelar): ")
+                    if eleccion == 0:
+                        break 
+                    elif eleccion > len(plataforma.listas):
+                        print("\nValor fuera de rango. Inténtalo de nuevo con un valor válido.")      
                     else:
-                        print("No hay canciones disponibles para agregar a la lista de reproducción. Primero agrega canciones a la biblioteca.")
+                        break
+
+                # Si el numero introducido por el usuario equivale a una de las listas disponibles, "accedemos" a esa lista
+                lista_seleccionada = plataforma.listas[eleccion - 1] #Esto lo que hace es que la lista seleccionada termina siendo la lista que esta en la posición que se seleccionó (Posiciones empiezan en 0, por eso se resta -1 )
+                print(f"La lista seleccionada es: {lista_seleccionada.nombre}")
+
+                print(len(plataforma.canciones))
+
+                if len(plataforma.canciones) != 0:
+
+                    print("\nCanciones disponibles para añadir: ")
+
+                    for canciones in plataforma.canciones:
+                        print(f"{canciones.id}) {canciones.titulo} - {canciones.artista}")
+                        # Bucle para comprobar el que el número introducido no sea 0 o esté fuera de rango
+
+                    while True:
+
+                        eleccion = pedir_int("Selecciona número de la canción a añadir (0 para cancelar): ")
+                        if eleccion == 0:
+                            break
+                        elif eleccion > len(plataforma.listas):
+                            print("\nValor fuera de rango. Inténtalo de nuevo con un valor válido.")
+                        else:
+                            break
+
+                    cancion_seleccionada = None #Inicializamos la variable que representará nuestra cancion eleccionada
+                    if eleccion == canciones.id: #Si la elección del usuario corresponde con el id de la canción 
+                        cancion_seleccionada = canciones # Nuesta canción seleccionada será la canción con ese id
+                        lista_seleccionada.canciones.append(cancion_seleccionada) #Agregamos la canción a la lista que hemos seleccionado antes
+                        print("Canción añadida\n")
+
+                else: 
+                    print("No hay canciones disponibles para añadir. Primero añade canciones a la biblioteca")
+
             else:
                 print("No hay listas disponibles a las que agregar canciones. Primero crea una lista de reproducción.")
 
-        if opc == 5:
-            print("-- Eliminar canción de lista --")
+        elif opc == 5:
+            print("-- Eliminar canción de una lista --")
 
-
-        if opc == 0:
+        elif opc == 0:
             break 
 
 # -----------------------------------------------------------------------------------
